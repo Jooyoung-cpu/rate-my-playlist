@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rate my playlist — school music community</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Inter:wght@400;500&family=Nunito:wght@700;800&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --surface2: #f0eee8;
+    --border: #e2ddd5;
+    --accent: #4a2d8f;
+    --accent-light: #c4b5f4;
+    --accent-mid: #7c5cbf;
+    --text: #181426;
+    --muted: #8a8499;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lexend', sans-serif;
+    font-weight: 800;
+    min-height: 100vh;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(247,245,240,0.94);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    text-decoration: none;
+    
+  }
+
+  
+
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 13px;
+    font-weight: 500; transition: color 0.2s; text-transform: capitalize;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+
+  .school-badge {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 6px 14px; border-radius: 20px; font-size: 12px;
+    color: var(--muted); font-family: 'Space Mono', monospace;
+  }
+
+  .school-badge strong { color: var(--accent); }
+
+  .btn {
+    padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.2s; font-family: 'Lexend', sans-serif; text-transform: capitalize; letter-spacing: 0px;
+  }
+
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #3a2070; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(74,45,143,0.25); }
+
+  .btn-ghost {
+    background: transparent; color: var(--text); border: 1.5px solid var(--border);
+    padding: 10px 22px; border-radius: 8px; font-size: 13px; cursor: pointer;
+    font-family: 'Lexend', sans-serif; font-weight: 500; transition: all 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--accent-mid); color: var(--accent); }
+
+  .hero {
+    padding: 72px 40px 56px;
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr 400px; gap: 60px;
+    align-items: center; max-width: 1200px; margin: 0 auto;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: rgba(196,181,244,0.18); border: 1px solid rgba(124,92,191,0.25);
+    color: var(--accent-mid); font-size: 11px; font-family: 'Space Mono', monospace;
+    padding: 4px 12px; border-radius: 4px; margin-bottom: 22px; letter-spacing: 0.5px;
+  }
+
+  .hero h1 {
+    font-family: 'Lexend', sans-serif;
+    font-size: 72px; line-height: 1.02; letter-spacing: -0.5px;
+    margin-bottom: 20px; color: var(--text); font-weight: 800;
+  }
+
+  .hero h1 .highlight { color: var(--accent);  }
+
+  .hero p {
+    font-size: 15px; color: var(--muted); line-height: 1.75;
+    margin-bottom: 32px; max-width: 420px;
+  }
+
+  .hero-actions { display: flex; gap: 12px; align-items: center; }
+
+  .stats { display: flex; gap: 36px; margin-top: 44px; }
+
+  .stat-num {
+    font-family: 'Lexend', sans-serif; font-size: 36px;
+    color: var(--accent); line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.8px; margin-top: 4px; font-weight: 500;
+  }
+
+  .featured-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 18px; overflow: hidden;
+    box-shadow: 0 4px 24px rgba(74,45,143,0.08);
+  }
+
+  .featured-card-header {
+    background: linear-gradient(135deg, #2d1b6e, #4a2d8f, #6b46c1);
+    padding: 28px;
+  }
+
+  .featured-label {
+    font-size: 10px; font-family: 'Space Mono', monospace;
+    color: var(--accent-light); letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 16px; display: block;
+  }
+
+  .playlist-art {
+    width: 72px; height: 72px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 30px; margin-bottom: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+
+  .playlist-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; color: #fff; }
+
+  .playlist-meta { font-size: 11px; color: rgba(255,255,255,0.45); font-family: 'Space Mono', monospace; }
+
+  .spotify-embed-mock {
+    margin: 16px 28px 0;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 10px;
+  }
+
+  .spotify-icon {
+    width: 26px; height: 26px; background: #1DB954; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
+  }
+
+  .spotify-info { flex: 1; }
+  .spotify-info .track { font-size: 12px; font-weight: 500; color: #fff; }
+  .spotify-info .sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; font-family: 'Space Mono', monospace; }
+
+  .play-btn {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent-light); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--accent);
+  }
+
+  .featured-card-body { padding: 20px 24px 22px; }
+
+  .rating-display { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+
+  .rating-big { font-family: 'Lexend', sans-serif; font-size: 48px; color: var(--accent); line-height: 1; }
+
+  .stars { font-size: 14px; margin-bottom: 4px; }
+
+  .rating-count { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  .rating-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+
+  .bar-label { font-size: 10px; color: var(--muted); width: 20px; text-align: right; font-family: 'Space Mono', monospace; }
+
+  .bar-track { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-light), var(--accent-mid)); border-radius: 2px; }
+
+  .bar-count { font-size: 10px; color: var(--muted); width: 20px; font-family: 'Space Mono', monospace; }
+
+  .main {
+    max-width: 1200px; margin: 0 auto; padding: 44px 40px;
+    display: grid; grid-template-columns: 1fr 300px; gap: 40px;
+  }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+
+  .section-title { font-family: 'Lexend', sans-serif; font-size: 24px; color: var(--text); }
+
+  .section-title span { color: var(--muted); font-size: 12px; font-family: 'Space Mono', monospace; margin-left: 8px; }
+
+  .filter-tabs { display: flex; gap: 6px; }
+
+  .tab {
+    padding: 5px 13px; border-radius: 14px; font-size: 11px; font-weight: 500;
+    cursor: pointer; border: 1.5px solid var(--border); background: transparent;
+    color: var(--muted); font-family: 'Lexend', sans-serif; transition: all 0.2s; text-transform: capitalize;
+  }
+
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tab:hover:not(.active) { border-color: var(--accent-mid); color: var(--accent); }
+
+  .playlist-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .playlist-item {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 18px 22px;
+    display: grid; grid-template-columns: 52px 1fr auto; gap: 14px;
+    align-items: center; transition: all 0.2s; cursor: pointer;
+  }
+
+  .playlist-item:hover {
+    border-color: var(--accent-mid); transform: translateX(3px);
+    box-shadow: 0 2px 14px rgba(74,45,143,0.08);
+  }
+
+  .item-art {
+    width: 52px; height: 52px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+
+  .item-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; color: var(--text); }
+
+  .item-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+
+  .tag {
+    font-size: 10px; padding: 2px 7px; border-radius: 4px;
+    background: rgba(196,181,244,0.15); color: var(--accent-mid);
+    font-family: 'Space Mono', monospace; border: 1px solid rgba(124,92,191,0.18);
+  }
+
+  .item-submitter { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 2px; }
+
+  .item-right { text-align: right; }
+
+  .item-score { font-family: 'Lexend', sans-serif; font-size: 32px; color: var(--accent); line-height: 1; }
+
+  .item-votes { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 2px; }
+
+  .item-new {
+    display: inline-block; background: rgba(196,181,244,0.25); color: var(--accent);
+    font-size: 9px; padding: 2px 6px; border-radius: 3px;
+    font-family: 'Space Mono', monospace; margin-top: 4px; font-weight: 600;
+    border: 1px solid rgba(124,92,191,0.2);
+  }
+
+  .sidebar-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 20px; margin-bottom: 16px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.03);
+  }
+
+  .sidebar-title {
+    font-family: 'Lexend', sans-serif; font-size: 17px;
+    margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .form-group { margin-bottom: 12px; }
+
+  .form-label {
+    display: block; font-size: 10px; color: var(--muted); margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: 0.8px; font-family: 'Space Mono', monospace;
+  }
+
+  .form-input {
+    width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 9px 12px; color: var(--text); font-size: 13px;
+    font-family: 'Lexend', sans-serif; outline: none; transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: var(--accent-mid); }
+  .form-input::placeholder { color: var(--muted); }
+
+  .spotify-input-wrap { position: relative; }
+
+  .spotify-prefix {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    color: #1DB954; font-size: 15px;
+  }
+
+  .form-input.with-icon { padding-left: 30px; }
+
+  .rank-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .rank-item:last-child { border-bottom: none; }
+
+  .rank-num { font-family: 'Lexend', sans-serif; font-size: 18px; color: var(--border); width: 20px; text-align: center; flex-shrink: 0; }
+  .rank-num.top { color: var(--accent); }
+
+  .rank-art { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+
+  .rank-info { flex: 1; min-width: 0; }
+
+  .rank-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+
+  .rank-sub { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  .rank-score { font-family: 'Lexend', sans-serif; font-size: 17px; color: var(--accent); flex-shrink: 0; }
+
+  .comment-section { margin-top: 28px; }
+
+  .comment-input-row { display: flex; gap: 10px; margin-bottom: 18px; }
+
+  .avatar {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+  }
+
+  .comment-input {
+    flex: 1; background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 9px 13px; color: var(--text);
+    font-size: 13px; font-family: 'Lexend', sans-serif; outline: none; resize: none;
+  }
+
+  .comment-input:focus { border-color: var(--accent-mid); }
+  .comment-input::placeholder { color: var(--muted); }
+
+  .comment-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .comment-item { display: flex; gap: 10px; }
+
+  .comment-body {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 15px; flex: 1;
+  }
+
+  .comment-header { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; flex-wrap: wrap; }
+
+  .comment-name { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  .comment-time { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  .score-badge {
+    font-size: 10px;
+    background: rgba(196,181,244,0.2); border: 1px solid rgba(124,92,191,0.22);
+    color: var(--accent); padding: 1px 7px; border-radius: 3px;
+    font-family: 'Space Mono', monospace; font-weight: 600;
+  }
+
+  .comment-text { font-size: 13px; color: var(--text); line-height: 1.68; opacity: 0.82; font-family: 'Inter', sans-serif; font-weight: 400; }
+
+  .comment-actions { display: flex; gap: 12px; margin-top: 8px; }
+
+  .comment-action {
+    font-size: 11px; color: var(--muted); cursor: pointer;
+    background: none; border: none; font-family: 'Lexend', sans-serif; transition: color 0.2s;
+  }
+
+  .comment-action:hover { color: var(--accent); }
+
+  .rate-this {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 18px; margin-bottom: 20px; text-align: center;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.03);
+  }
+
+  .rate-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; font-family: 'Space Mono', monospace; }
+
+  .star-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 14px; }
+
+  .star { font-size: 26px; cursor: pointer; color: var(--border); transition: color 0.12s, transform 0.12s; }
+  .star:hover { transform: scale(1.15); }
+  .star.lit { color: var(--accent-mid); }
+
+  .detail-section { max-width: 1200px; margin: 0 auto; padding: 0 40px 60px; }
+
+  .detail-grid { display: grid; grid-template-columns: 320px 1fr; gap: 36px; }
+
+  .detail-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 16px; overflow: hidden; margin-bottom: 16px;
+    box-shadow: 0 2px 16px rgba(74,45,143,0.06);
+  }
+
+  .detail-art-header {
+    background: linear-gradient(135deg, #2d1b6e, #4a2d8f, #6b46c1);
+    padding: 28px; text-align: center;
+  }
+
+  .detail-art {
+    width: 110px; height: 110px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 46px;
+    margin: 0 auto 18px; box-shadow: 0 12px 36px rgba(0,0,0,0.25);
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .detail-title { font-size: 22px; font-weight: 600; margin-bottom: 5px; color: #fff; }
+
+  .detail-sub { font-size: 11px; color: rgba(255,255,255,0.42); font-family: 'Space Mono', monospace; }
+
+  .detail-body { padding: 20px 22px; }
+
+  .track-row { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .track-row:last-child { border-bottom: none; }
+
+  .track-num { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; width: 14px; text-align: right; flex-shrink: 0; }
+
+  .track-info { flex: 1; min-width: 0; }
+
+  .track-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; color: var(--text); }
+
+  .track-artist { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .track-dur { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; flex-shrink: 0; }
+
+  .page-indicator {
+    background: rgba(196,181,244,0.12); border-top: 1px solid rgba(124,92,191,0.18);
+    border-bottom: 1px solid rgba(124,92,191,0.18);
+    color: var(--accent-mid); text-align: center; padding: 10px;
+    font-size: 11px; font-family: 'Space Mono', monospace; letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  .screen-label {
+    display: inline-block; background: rgba(196,181,244,0.12);
+    border: 1px solid rgba(124,92,191,0.18);
+    border-radius: 5px; padding: 3px 9px; font-size: 10px;
+    font-family: 'Space Mono', monospace; color: var(--accent-mid); margin-bottom: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .main { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 52px; }
+    nav { padding: 14px 20px; }
+    .hero { padding: 44px 20px 36px; }
+    .main { padding: 28px 20px; }
+    .detail-section { padding: 0 20px 44px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-indicator">📱 screen 1 — main feed (home)</div>
+
+<nav>
+  <a class="logo" href="#">rate<span style="color:var(--text)">my</span>playlist</a>
+  <ul class="nav-links">
+    <li><a href="#">Feed</a></li>
+    <li><a href="#">Rankings</a></li>
+    <li><a href="#">My Playlists</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="school-badge">🏫 <strong>Westview High</strong> community</span>
+    <button class="btn btn-primary">submit playlist</button>
+  </div>
+</nav>
+
+<section style="max-width:1200px;margin:0 auto;padding:0 40px;">
+  <div class="hero" style="padding-left:0;padding-right:0;">
+    <div>
+      <span class="hero-tag">🎵 trending this week</span>
+      <h1>your playlist,<br><span class="highlight">get rated.</span></h1>
+      <p>Submit your playlist, let your classmates rate it and leave comments — the ultimate school music community.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary">submit playlist →</button>
+        <button class="btn-ghost">Browse</button>
+      </div>
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-num">284</div>
+          <div class="stat-label">Playlists</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">1.2K</div>
+          <div class="stat-label">Ratings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">89</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="featured-card">
+      <div class="featured-card-header">
+        <span class="featured-label">🔥 this week's #1</span>
+        <div class="playlist-art">🌙</div>
+        <div class="playlist-name">Late Night Vibes.zip</div>
+        <div class="playlist-meta">by @jiwon_k · Grade 12, Class B</div>
+        <div class="spotify-embed-mock">
+          <div class="spotify-icon">♪</div>
+          <div class="spotify-info">
+            <div class="track">Lofi Study Beats</div>
+            <div class="sub">open.spotify.com/playlist/...</div>
+          </div>
+          <button class="play-btn">▶</button>
+        </div>
+      </div>
+      <div class="featured-card-body">
+        <div class="rating-display">
+          <div class="rating-big">9.2</div>
+          <div class="rating-details">
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <div class="rating-count">142 ratings</div>
+          </div>
+        </div>
+        <div>
+          <div class="rating-bar-row"><span class="bar-label">10</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-count">82</span></div>
+          <div class="rating-bar-row"><span class="bar-label">9</span><div class="bar-track"><div class="bar-fill" style="width:54%"></div></div><span class="bar-count">38</span></div>
+          <div class="rating-bar-row"><span class="bar-label">8</span><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><span class="bar-count">16</span></div>
+          <div class="rating-bar-row"><span class="bar-label">7</span><div class="bar-track"><div class="bar-fill" style="width:12%"></div></div><span class="bar-count">6</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="main">
+  <div>
+    <span class="screen-label">// feed</span>
+    <div class="section-header">
+      <div class="section-title">Latest Playlists <span>284 total</span></div>
+      <div class="filter-tabs">
+        <button class="tab active">Newest</button>
+        <button class="tab">Top Rated</button>
+        <button class="tab">Most Voted</button>
+      </div>
+    </div>
+
+    <div class="playlist-list">
+      <div class="playlist-item">
+        <div class="item-art" style="background:linear-gradient(135deg,#ede9ff,#d8ccff)">🎸</div>
+        <div class="item-info">
+          <div class="item-submitter">@minhyuk_99 · Grade 11, Class A</div>
+          <div class="item-name">My Current Indie Obsession</div>
+          <div class="item-tags"><span class="tag">indie</span><span class="tag">alternative</span><span class="tag">23 tracks</span></div>
+        </div>
+        <div class="item-right">
+          <div class="item-score">8.7</div>
+          <div class="item-votes">68 votes</div>
+          <div class="item-new">new</div>
+        </div>
+      </div>
+
+      <div class="playlist-item">
+        <div class="item-art" style="background:linear-gradient(135deg,#fce8f4,#f9cfe6)">💃</div>
+        <div class="item-info">
+          <div class="item-submitter">@soyeon.choi · Grade 10, Class C</div>
+          <div class="item-name">Sports Day Warm Up 🔥</div>
+          <div class="item-tags"><span class="tag">dance</span><span class="tag">pop</span><span class="tag">hype</span></div>
+        </div>
+        <div class="item-right">
+          <div class="item-score">7.4</div>
+          <div class="item-votes">31 votes</div>
+        </div>
+      </div>
+
+      <div class="playlist-item">
+        <div class="item-art" style="background:linear-gradient(135deg,#e0f0ff,#c5dff9)">🌊</div>
+        <div class="item-info">
+          <div class="item-submitter">@taehun_lee · Grade 12, Class E</div>
+          <div class="item-name">Study Focus BGM — Exam Season</div>
+          <div class="item-tags"><span class="tag">lofi</span><span class="tag">focus</span><span class="tag">45 tracks</span></div>
+        </div>
+        <div class="item-right">
+          <div class="item-score">9.0</div>
+          <div class="item-votes">115 votes</div>
+        </div>
+      </div>
+
+      <div class="playlist-item">
+        <div class="item-art" style="background:linear-gradient(135deg,#fff3e0,#fde4b8)">🌅</div>
+        <div class="item-info">
+          <div class="item-submitter">@yerin_02 · Grade 11, Class D</div>
+          <div class="item-name">Perfect Walk Home Playlist</div>
+          <div class="item-tags"><span class="tag">R&B</span><span class="tag">hip-hop</span><span class="tag">chill</span></div>
+        </div>
+        <div class="item-right">
+          <div class="item-score">8.1</div>
+          <div class="item-votes">44 votes</div>
+          <div class="item-new">new</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-title">🎵 Submit A Playlist</div>
+      <div class="form-group">
+        <label class="form-label">playlist name</label>
+        <input class="form-input" type="text" placeholder="e.g. Late Night Vibes.zip">
+      </div>
+      <div class="form-group">
+        <label class="form-label">spotify link</label>
+        <div class="spotify-input-wrap">
+          <span class="spotify-prefix">♪</span>
+          <input class="form-input with-icon" type="text" placeholder="paste link here">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">description</label>
+        <input class="form-input" type="text" placeholder="what's the vibe?">
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px;">submit →</button>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">🏆 This Week's Top 5</div>
+      <div class="rank-list">
+        <div class="rank-item">
+          <div class="rank-num top">1</div>
+          <div class="rank-art" style="background:linear-gradient(135deg,#2d1b6e,#4a2d8f)">🌙</div>
+          <div class="rank-info"><div class="rank-name">Late Night Vibes.zip</div><div class="rank-sub">@jiwon_k</div></div>
+          <div class="rank-score">9.2</div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-num top">2</div>
+          <div class="rank-art" style="background:linear-gradient(135deg,#e0f0ff,#c5dff9)">🌊</div>
+          <div class="rank-info"><div class="rank-name">Study Focus BGM</div><div class="rank-sub">@taehun_lee</div></div>
+          <div class="rank-score">9.0</div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-num top">3</div>
+          <div class="rank-art" style="background:linear-gradient(135deg,#ede9ff,#d8ccff)">🎸</div>
+          <div class="rank-info"><div class="rank-name">My Current Indie Obsession</div><div class="rank-sub">@minhyuk_99</div></div>
+          <div class="rank-score">8.7</div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-num">4</div>
+          <div class="rank-art" style="background:linear-gradient(135deg,#fff3e0,#fde4b8)">🌅</div>
+          <div class="rank-info"><div class="rank-name">Perfect Walk Home</div><div class="rank-sub">@yerin_02</div></div>
+          <div class="rank-score">8.1</div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-num">5</div>
+          <div class="rank-art" style="background:linear-gradient(135deg,#fce8f4,#f9cfe6)">💃</div>
+          <div class="rank-info"><div class="rank-name">Sports Day Warm Up 🔥</div><div class="rank-sub">@soyeon.choi</div></div>
+          <div class="rank-score">7.4</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: PLAYLIST DETAIL -->
+<div class="page-indicator">📱 screen 2 — playlist detail page</div>
+
+<div class="detail-section" style="padding-top:44px;">
+  <div class="detail-grid">
+    <div class="detail-left">
+      <div class="detail-card">
+        <div class="detail-art-header">
+          <div class="detail-art">🌙</div>
+          <div class="detail-title">Late Night Vibes.zip</div>
+          <div class="detail-sub">by @jiwon_k · Grade 12, Class B · 28 tracks</div>
+        </div>
+        <div class="detail-body">
+          <div class="spotify-embed-mock" style="margin:0 0 18px 0;">
+            <div class="spotify-icon">♪</div>
+            <div class="spotify-info">
+              <div class="track">Listen on Spotify</div>
+              <div class="sub">Late Night Vibes.zip</div>
+            </div>
+            <button class="play-btn">▶</button>
+          </div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;font-family:'Space Mono',monospace;">tracklist</div>
+          <div class="track-list">
+            <div class="track-row">
+              <span class="track-num">1</span>
+              <div class="track-info"><div class="track-name">Kiln</div><div class="track-artist">Novo Amor</div></div>
+              <span class="track-dur">3:42</span>
+            </div>
+            <div class="track-row">
+              <span class="track-num">2</span>
+              <div class="track-info"><div class="track-name">Lua</div><div class="track-artist">Bright Eyes</div></div>
+              <span class="track-dur">4:28</span>
+            </div>
+            <div class="track-row">
+              <span class="track-num">3</span>
+              <div class="track-info"><div class="track-name">The Night Will Always Win</div><div class="track-artist">Manchester Orchestra</div></div>
+              <span class="track-dur">3:55</span>
+            </div>
+            <div class="track-row" style="border-bottom:none;">
+              <span class="track-num" style="color:var(--accent-mid)">+25</span>
+              <div class="track-info"><div class="track-name" style="color:var(--accent-mid)">view full playlist on Spotify →</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="rate-this">
+        <div class="rate-label">rate this playlist</div>
+        <div class="star-row">
+          <span class="star lit">★</span><span class="star lit">★</span><span class="star lit">★</span>
+          <span class="star lit">★</span><span class="star lit">★</span>
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          <span class="star">★</span><span class="star">★</span>
+        </div>
+        <button class="btn btn-primary" id="rateBtn" style="width:100%;">give 5/10 →</button>
+      </div>
+
+      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 8px rgba(0,0,0,0.03);">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;">
+          <div style="font-family:'Lexend',sans-serif;font-size:58px;color:var(--accent);line-height:1;">9.2</div>
+          <div>
+            <div style="font-size:18px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+            <div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;">142 ratings</div>
+          </div>
+        </div>
+        <div>
+          <div class="rating-bar-row"><span class="bar-label">10</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-count">82</span></div>
+          <div class="rating-bar-row"><span class="bar-label">9</span><div class="bar-track"><div class="bar-fill" style="width:54%"></div></div><span class="bar-count">38</span></div>
+          <div class="rating-bar-row"><span class="bar-label">8</span><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><span class="bar-count">16</span></div>
+          <div class="rating-bar-row"><span class="bar-label">7</span><div class="bar-track"><div class="bar-fill" style="width:12%"></div></div><span class="bar-count">6</span></div>
+        </div>
+      </div>
+
+      <div class="comment-section">
+        <div style="font-family:'Lexend',sans-serif;font-size:20px;margin-bottom:14px;color:var(--text);">Comments <span style="color:var(--accent-light);font-size:12px;font-family:'Space Mono',monospace;">24</span></div>
+
+        <div class="comment-input-row">
+          <div class="avatar" style="background:linear-gradient(135deg,#7c5cbf,#4a2d8f);">me</div>
+          <textarea class="comment-input" rows="2" placeholder="what did you think? be honest..."></textarea>
+        </div>
+
+        <div class="comment-list">
+          <div class="comment-item">
+            <div class="avatar" style="background:linear-gradient(135deg,#c084fc,#a855f7);">SC</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-name">@soyeon.choi</span>
+                <span class="score-badge">10/10</span>
+                <span class="comment-time">12 min ago</span>
+              </div>
+              <div class="comment-text">This hits so differently at 3am... the track selection is insane. Never heard Kiln before but I saved it immediately.</div>
+              <div class="comment-actions">
+                <button class="comment-action">👍 14</button>
+                <button class="comment-action">↩ reply</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="comment-item">
+            <div class="avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);">MH</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-name">@minhyuk_99</span>
+                <span class="score-badge">9/10</span>
+                <span class="comment-time">1 hr ago</span>
+              </div>
+              <div class="comment-text">The flow is really good throughout. Could've used 1-2 more upbeat tracks in the middle, but still a solid 9.</div>
+              <div class="comment-actions">
+                <button class="comment-action">👍 8</button>
+                <button class="comment-action">↩ reply</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="comment-item">
+            <div class="avatar" style="background:linear-gradient(135deg,#fb923c,#f97316);">TL</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-name">@taehun_lee</span>
+                <span class="score-badge">8/10</span>
+                <span class="comment-time">3 hrs ago</span>
+              </div>
+              <div class="comment-text">Classic sad boy hours playlist lol. Not bad though, 8/10.</div>
+              <div class="comment-actions">
+                <button class="comment-action">👍 5</button>
+                <button class="comment-action">↩ reply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const stars = document.querySelectorAll('.star');
+  let currentRating = 5;
+
+  stars.forEach((star, i) => {
+    star.addEventListener('mouseover', () => {
+      stars.forEach((s, j) => s.classList.toggle('lit', j <= i));
+    });
+    star.addEventListener('click', () => {
+      currentRating = i + 1;
+      document.getElementById('rateBtn').textContent = `give ${currentRating}/10 →`;
+    });
+  });
+
+  document.querySelector('.rate-this').addEventListener('mouseleave', () => {
+    stars.forEach((s, j) => s.classList.toggle('lit', j < currentRating));
+  });
+</script>
+</body>
+</html>
